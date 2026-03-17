@@ -1,117 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curriculo do Willian</title>
+    <title>Planner</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1{
+            font-size: 60px;
+            margin-bottom: 40px;
+        }
+
+        .container{
+            display: flex;
+            gap: 60px;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+
+        th{
+            border: 3px solid black;
+            font-size: 28px;
+            width: 180px;
+            height: 80px;
+            text-align: center;
+        }
+
+        td{
+            border: 3px solid black;
+            width: 180px;
+            height: 140px;
+            font-size: 26px;
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .anotacoes{
+            width: 450px;
+            height: 820px;
+            border: 4px solid black;
+            padding: 20px;
+        }
+
+        .anotacoes h2{
+            font-size: 36px;
+        }
+
+        .tarefas{
+            margin-top: 60px;
+            width: 100%;
+            height: 250px;
+            border: 4px solid black;
+            padding: 20px;
+        }
+
+        .tarefas h2{
+            font-size: 36px;
+        }
+
+    </style>
+
 </head>
+
 <body>
-<main>
-    <section id="pessoal">
-        <h1>Dados Pessoais</h1>
-        <ul id="dados_pessoais">
-            <li><label><strong>Nome:</strong></label> Kauan Carlos Scheidt</li>
-            <li><label><strong>Telefone:</strong></label> (48) 998051454</li>
-            <li><label><strong>Idade:</strong></label> 21 anos</li>
-        </ul>
-    </section>
-    <section id="academico">
-        <h1>Formacao Academica</h1>
-        <!-- formacao | onde | ano-->
+
+<h1>Planner (Março)</h1>
+
+<div class="container">
+
+    <div class="calendario">
+
         <table>
-            <thead>
+
             <tr>
-                <td><strong>#</strong></td>
-                <td><strong>Formacao</strong></td>
-                <td><strong>Instituicao</strong></td>
-                <td><strong>Ano</strong></td>
+                <th>Dom</th>
+                <th>Seg</th>
+                <th>Ter</th>
+                <th>Qua</th>
+                <th>Qui</th>
+                <th>Sex</th>
+                <th>Sab</th>
             </tr>
-            </thead>
-            <body>
-            <tr>
-                <td>1</td>
-                <td>Graduacao</td>
-                <td>SIN/UFSC</td>
-                <td>2006</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Mestrado</td>
-                <td>EGC/UFSC</td>
-                <td>2009</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Doutorado</td>
-                <td>PPGCC/UFSC</td>
-                <td>2023</td>
-            </tr>
-            </body>
-            <tfoot>
+
             <tr>
                 <td></td>
-                <td>Quantidade</td>
-                <td></td>
-                <td>3</td>
-            </tr>
-            </tfoot>
-        </table>
-    </section>
-    <section id="profissional">
-        <h1>Experiencia Profissional</h1>
-        <table>
-            <thead>
-            <tr>
-                <td><strong>#</strong></td>
-                <td><strong>Local</strong></td>
-                <td><strong>Cargo</strong></td>
-                <td><strong>Tempo</strong></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
                 <td>1</td>
-                <td>SENAI</td>
-                <td>Instrutor</td>
-                <td>5 anos</td>
-            </tr>
-            <tr>
                 <td>2</td>
-                <td>CCT/UDESC</td>
-                <td>Professor Colaborador</td>
-                <td>6 anos</td>
-            </tr>
-            <tr>
                 <td>3</td>
-                <td>SOCIESC</td>
-                <td>Professor Horista</td>
-                <td>2 anos</td>
-            </tr>
-            <tr>
                 <td>4</td>
-                <td>IFC/Campus Rio do Sul</td>
-                <td>Professor EBTT</td>
-                <td>10 anos</td>
+                <td>5</td>
+                <td>6</td>
             </tr>
-            </tbody>
-            <tfoot>
+
             <tr>
-                <td></td>
-                <td>Total Anos</td>
-                <td></td>
-                <td>23 anos</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
             </tr>
-            </tfoot>
+
+            <tr>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>19</td>
+                <td>20</td>
+            </tr>
+
+            <tr>
+                <td>21</td>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+                <td>25</td>
+                <td>26</td>
+                <td>27</td>
+            </tr>
+
+            <tr>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+                <td>31</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
         </table>
-    </section>
-    <section id="observacao">
-        <h1>Observacoes</h1>
-        <span>
-                <p>
-                    Bem vindos a aula de coisas mais bonitas que farao no desenvolvimento!
-                </p>
-            </span>
-    </section>
-</main>
+
+    </div>
+
+    <div class="anotacoes">
+        <h2>Anotações</h2>
+    </div>
+
+</div>
+
+<div class="tarefas">
+    <h2>Lista de Tarefas</h2>
+</div>
+
 </body>
 </html>

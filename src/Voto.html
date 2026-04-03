@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercícios JS - Parte 1</title>
+</head>
+<body>
+
+<h2>Exercício 1 - Dados pessoais</h2>
+<input type="text" id="nome" placeholder="Nome"><br><br>
+<input type="text" id="idade" placeholder="Idade"><br><br>
+<input type="text" id="endereco" placeholder="Endereço"><br><br>
+<input type="text" id="cep" placeholder="CEP"><br><br>
+<input type="text" id="cpf" placeholder="CPF"><br><br>
+<button onclick="mostrarDados()">Mostrar</button>
+<p id="resultado1"></p>
+
+<hr>
+
+<h2>Exercício 2 - Maior número</h2>
+<input type="number" id="n1" placeholder="Número 1"><br><br>
+<input type="number" id="n2" placeholder="Número 2"><br><br>
+<input type="number" id="n3" placeholder="Número 3"><br><br>
+<button onclick="maiorNumero()">Verificar</button>
+<p id="resultado2"></p>
+
+<hr>
+
+<h2>Exercício 3 - Situação do voto</h2>
+<input type="number" id="idadeVoto" placeholder="Idade"><br><br>
+<button onclick="verificarVoto()">Verificar</button>
+<p id="resultado3"></p>
+
+<script>
+    function mostrarDados() {
+        var nome = document.getElementById('nome').value;
+        var idade = document.getElementById('idade').value;
+        var endereco = document.getElementById('endereco').value;
+        var cep = document.getElementById('cep').value;
+        var cpf = document.getElementById('cpf').value;
+
+        document.getElementById('resultado1').innerHTML =
+            'Nome: ' + nome + '<br>' +
+            'Idade: ' + idade + '<br>' +
+            'Endereço: ' + endereco + '<br>' +
+            'CEP: ' + cep + '<br>' +
+            'CPF: ' + cpf;
+    }
+
+    function maiorNumero() {
+        var n1 = parseFloat(document.getElementById('n1').value);
+        var n2 = parseFloat(document.getElementById('n2').value);
+        var n3 = parseFloat(document.getElementById('n3').value);
+        var maior;
+
+        if (n1 >= n2 && n1 >= n3) {
+            maior = n1;
+        } else if (n2 >= n1 && n2 >= n3) {
+            maior = n2;
+        } else {
+            maior = n3;
+        }
+
+        document.getElementById('resultado2').innerText = 'O maior é: ' + maior;
+    }
+
+    function verificarVoto() {
+        var idade = parseInt(document.getElementById('idadeVoto').value);
+
+        if (idade < 16) {
+            document.getElementById('resultado3').innerText = 'Não vota.';
+        } else if (idade <= 17) {
+            document.getElementById('resultado3').innerText = 'Voto opcional.';
+        } else if (idade <= 70) {
+            document.getElementById('resultado3').innerText = 'Voto obrigatório.';
+        } else {
+            document.getElementById('resultado3').innerText = 'Voto opcional.';
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Didático de Ordenação Quadrática</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 20px; color: #2c3e50; text-align: center; }
+        
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .visualizer-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-section h2 { margin-top: 0; color: #2980b9; font-size: 20px; }
+        .info-section p { font-size: 14px; line-height: 1.6; color: #555; }
+        .complexity { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+        .complexity span { display: block; font-size: 13px; margin-bottom: 5px; font-weight: bold; color: #2c3e50; }
+
+        .legend-container {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .legend-title { font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #2c3e50; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 6px; font-size: 13px; color: #555; }
+        .color-box { width: 16px; height: 16px; border-radius: 3px; margin-right: 8px; border: 1px solid #ccc; }
+
+        .controls {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        select, button, input {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button { background-color: #3498db; color: white; cursor: pointer; border: none; transition: background 0.3s; font-weight: bold; }
+        button:hover:not(:disabled) { background-color: #2980b9; }
+        button:disabled { background-color: #bdc3c7; cursor: not-allowed; color: #7f8c8d; }
+        
+        #btn-pause { background-color: #f39c12; }
+        #btn-pause:hover:not(:disabled) { background-color: #d68910; }
+        
+        #btn-step { background-color: #8e44ad; }
+        #btn-step:hover:not(:disabled) { background-color: #732d91; }
+
+        #btn-stop { background-color: #c0392b; }
+        #btn-stop:hover:not(:disabled) { background-color: #a93226; }
+
+        #bars-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 400px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            gap: 4px;
+            box-sizing: border-box;
+        }
+
+        .bar {
+            background-color: #3498db;
+            width: 100%;
+            border-radius: 3px 3px 0 0;
+            transition: height 0.1s ease, background-color 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 5px;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
+        .status { margin-top: 15px; font-weight: bold; font-size: 16px; min-height: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h1>Simulador Didático de Algoritmos de Ordenação</h1>
+    
+    <div class="main-layout">
+        <div class="visualizer-section">
+            <div class="controls">
+                <select id="algorithm" onchange="updateDidacticInfo()">
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                </select>
+                <button id="btn-generate" onclick="generateArray()">Novo Vetor</button>
+                <button id="btn-sort" onclick="startSort()">Iniciar</button>
+                <button id="btn-pause" onclick="togglePause()" disabled>Pausar</button>
+                <button id="btn-step" onclick="stepSort()" disabled>Avançar Passo</button>
+                <button id="btn-stop" onclick="stopSort()" disabled>Parar</button>
+                <div>
+                    <label for="speed">Velocidade:</label>
+                    <input type="range" id="speed" min="1" max="100" value="50">
+                </div>
+            </div>
+
+            <div id="bars-container"></div>
+            <div class="status" id="status-text">Aguardando...</div>
+        </div>
+
+        <div class="info-section">
+            <h2 id="info-title">Bubble Sort</h2>
+            <p id="info-desc">Carregando explicação...</p>
+            <div class="complexity">
+                <span id="info-best">Melhor Caso: </span>
+                <span id="info-avg">Caso Médio: </span>
+                <span id="info-worst">Pior Caso: </span>
+                <span id="info-space">Espaço: </span>
+            </div>
+            <div class="legend-container" id="legend-container">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('bars-container');
+        const statusText = document.getElementById('status-text');
+        let array = [];
+        const ARRAY_SIZE = 30;
+        
+        let isSorting = false;
+        let isPaused = false;
+        let isStopped = false;
+        let isStepping = false;
+
+        const didacticData = {
+            bubble: {
+                title: "Bubble Sort",
+                desc: "O algoritmo 'flutua' o maior elemento para a última posição a cada iteração, realizando trocas adjacentes. É um algoritmo estável, mas muito ineficiente para grandes conjuntos de dados devido ao alto número de trocas.",
+                best: "Melhor Caso: O(n)",
+                avg: "Caso Médio: O(n²)",
+                worst: "Pior Caso: O(n²)",
+                space: "Espaço Auxiliar: O(1)",
+                legends: [
+                    { color: '#3498db', text: 'Não ordenado' },
+                    { color: '#e74c3c', text: 'Comparando elementos' },
+                    { color: '#2ecc71', text: 'Posição final ordenada' }
+                ]
+            },
+            selection: {
+                title: "Selection Sort",
+                desc: "Divide o vetor em uma parte ordenada e outra não ordenada. A cada passo, busca o menor elemento da parte não ordenada e o troca com o primeiro elemento dessa parte. Realiza poucas trocas (O(n)), mas muitas comparações.",
+                best: "Melhor Caso: O(n²)",
+                avg: "Caso Médio: O(n²)",
+                worst: "Pior Caso: O(n²)",
+                space: "Espaço Auxiliar: O(1)",
+                legends: [
+                    { color: '#3498db', text: 'Não ordenado' },
+                    { color: '#f1c40f', text: 'Menor elemento encontrado' },
+                    { color: '#e74c3c', text: 'Analisando/Buscando menor' },
+                    { color: '#2ecc71', text: 'Ordenado' }
+                ]
+            },
+            insertion: {
+                title: "Insertion Sort",
+                desc: "Constrói a ordenação inserindo um elemento de cada vez na sua posição correta relativa aos elementos já avaliados. É extremamente eficiente para vetores pequenos ou quase ordenados.",
+                best: "Melhor Caso: O(n)",
+                avg: "Caso Médio: O(n²)",
+                worst: "Pior Caso: O(n²)",
+                space: "Espaço Auxiliar: O(1)",
+                legends: [
+                    { color: '#2ecc71', text: 'Sub-lista ordenada' },
+                    { color: '#e74c3c', text: 'Avaliando chave atual' },
+                    { color: '#f1c40f', text: 'Deslocando para a direita' }
+                ]
+            }
+        };
+
+        function updateDidacticInfo() {
+            const algo = document.getElementById('algorithm').value;
+            const data = didacticData[algo];
+            document.getElementById('info-title').innerText = data.title;
+            document.getElementById('info-desc').innerText = data.desc;
+            document.getElementById('info-best').innerText = data.best;
+            document.getElementById('info-avg').innerText = data.avg;
+            document.getElementById('info-worst').innerText = data.worst;
+            document.getElementById('info-space').innerText = data.space;
+
+            const legendContainer = document.getElementById('legend-container');
+            legendContainer.innerHTML = '<div class="legend-title">Legenda de Cores</div>';
+            
+            data.legends.forEach(leg => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `<div class="color-box" style="background-color: ${leg.color};"></div><span>${leg.text}</span>`;
+                legendContainer.appendChild(item);
+            });
+        }
+
+        function getSpeed() {
+            const speedInput = document.getElementById('speed').value;
+            return 1515 - (speedInput * 15);
+        }
+
+        async function smartSleep() {
+            const ms = getSpeed();
+            let elapsed = 0;
+            const checkInterval = 20;
+
+            while (elapsed < ms || isPaused) {
+                if (isStopped) throw new Error('STOP_SORTING');
+                
+                // Se estiver pausado e o usuário clicou em "Avançar Passo"
+                if (isPaused && isStepping) {
+                    isStepping = false;
+                    return; // Sai do loop e permite avançar apenas 1 passo
+                }
+
+                await new Promise(resolve => setTimeout(resolve, checkInterval));
+                if (!isPaused) elapsed += checkInterval;
+            }
+            if (isStopped) throw new Error('STOP_SORTING');
+        }
+
+        function generateArray() {
+            if (isSorting && !isStopped) return;
+            array = [];
+            container.innerHTML = '';
+            for (let i = 0; i < ARRAY_SIZE; i++) {
+                const value = Math.floor(Math.random() * 90) + 10;
+                array.push(value);
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.height = `${value * 3.5}px`;
+                
+                const span = document.createElement('span');
+                span.innerText = value;
+                bar.appendChild(span);
+                
+                container.appendChild(bar);
+            }
+            statusText.innerText = "Novo vetor gerado. Pronto para ordenar.";
+            statusText.style.color = '#333';
+        }
+
+        function setBarColor(index, color) {
+            const bars = document.getElementsByClassName('bar');
+            if(bars[index]) bars[index].style.backgroundColor = color;
+        }
+
+        function updateBarHeight(index, value) {
+            const bars = document.getElementsByClassName('bar');
+            if(bars[index]) {
+                bars[index].style.height = `${value * 3.5}px`;
+                bars[index].querySelector('span').innerText = value;
+            }
+        }
+
+        async function swap(i, j) {
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+            updateBarHeight(i, array[i]);
+            updateBarHeight(j, array[j]);
+        }
+
+        function toggleButtons(sorting) {
+            document.getElementById('btn-generate').disabled = sorting;
+            document.getElementById('btn-sort').disabled = sorting;
+            document.getElementById('algorithm').disabled = sorting;
+            document.getElementById('btn-pause').disabled = !sorting;
+            document.getElementById('btn-stop').disabled = !sorting;
+            
+            // O botão de avanço só habilita quando está pausado
+            document.getElementById('btn-step').disabled = true; 
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const btnPause = document.getElementById('btn-pause');
+            const btnStep = document.getElementById('btn-step');
+
+            if (isPaused) {
+                btnPause.innerText = "Retomar";
+                btnPause.style.backgroundColor = "#2ecc71";
+                statusText.innerText = "Ordenação Pausada.";
+                btnStep.disabled = false; // Habilita o passo a passo
+            } else {
+                btnPause.innerText = "Pausar";
+                btnPause.style.backgroundColor = "#f39c12";
+                statusText.innerText = "Ordenação Retomada...";
+                btnStep.disabled = true; // Desabilita o passo a passo
+                isStepping = false;
+            }
+        }
+
+        function stepSort() {
+            if (isPaused) {
+                isStepping = true;
+            }
+        }
+
+        function stopSort() {
+            isStopped = true;
+            isPaused = false;
+            isStepping = false;
+        }
+
+        // --- ALGORITMOS ---
+
+        async function bubbleSort() {
+            for (let i = 0; i < array.length - 1; i++) {
+                for (let j = 0; j < array.length - i - 1; j++) {
+                    setBarColor(j, '#e74c3c'); setBarColor(j + 1, '#e74c3c');
+                    statusText.innerText = `Comparando posições ${j} (${array[j]}) e ${j+1} (${array[j+1]})`;
+                    await smartSleep();
+                    
+                    if (array[j] > array[j + 1]) {
+                        statusText.innerText = `Trocando: ${array[j]} > ${array[j+1]}`;
+                        await swap(j, j + 1);
+                        await smartSleep();
+                    }
+                    setBarColor(j, '#3498db'); setBarColor(j + 1, '#3498db');
+                }
+                setBarColor(array.length - 1 - i, '#2ecc71');
+            }
+            setBarColor(0, '#2ecc71');
+        }
+
+        async function selectionSort() {
+            for (let i = 0; i < array.length; i++) {
+                let minIdx = i;
+                setBarColor(minIdx, '#f1c40f');
+                for (let j = i + 1; j < array.length; j++) {
+                    setBarColor(j, '#e74c3c');
+                    statusText.innerText = `Buscando menor: Atual é ${array[minIdx]}, analisando ${array[j]}`;
+                    await smartSleep();
+                    
+                    if (array[j] < array[minIdx]) {
+                        setBarColor(minIdx, '#3498db');
+                        minIdx = j;
+                        setBarColor(minIdx, '#f1c40f');
+                    } else {
+                        setBarColor(j, '#3498db');
+                    }
+                }
+                if (minIdx !== i) {
+                    statusText.innerText = `Trocando menor elemento ${array[minIdx]} com início da não-ordenada ${array[i]}`;
+                    await swap(i, minIdx);
+                    await smartSleep();
+                }
+                setBarColor(minIdx, '#3498db');
+                setBarColor(i, '#2ecc71');
+            }
+        }
+
+        async function insertionSort() {
+            setBarColor(0, '#2ecc71');
+            for (let i = 1; i < array.length; i++) {
+                let key = array[i];
+                let j = i - 1;
+                setBarColor(i, '#e74c3c');
+                statusText.innerText = `Avaliando ${key} para inserir na sub-lista ordenada`;
+                await smartSleep();
+
+                while (j >= 0 && array[j] > key) {
+                    setBarColor(j, '#f1c40f');
+                    statusText.innerText = `Deslocando ${array[j]} para a direita`;
+                    array[j + 1] = array[j];
+                    updateBarHeight(j + 1, array[j + 1]);
+                    await smartSleep();
+                    setBarColor(j, '#2ecc71');
+                    j--;
+                }
+                array[j + 1] = key;
+                updateBarHeight(j + 1, key);
+                statusText.innerText = `Inseriu ${key} na posição correta`;
+                await smartSleep();
+                
+                for(let k = 0; k <= i; k++) setBarColor(k, '#2ecc71');
+            }
+        }
+
+        // --- CONTROLE DE EXECUÇÃO ---
+
+        async function startSort() {
+            if (isSorting) return;
+            
+            isSorting = true;
+            isStopped = false;
+            isPaused = false;
+            isStepping = false;
+            
+            const btnPause = document.getElementById('btn-pause');
+            btnPause.innerText = "Pausar";
+            btnPause.style.backgroundColor = "#f39c12";
+
+            toggleButtons(true);
+            const algo = document.getElementById('algorithm').value;
+            
+            try {
+                if (algo === 'bubble') await bubbleSort();
+                else if (algo === 'selection') await selectionSort();
+                else if (algo === 'insertion') await insertionSort();
+                
+                statusText.innerText = "Ordenação Concluída com Sucesso!";
+                statusText.style.color = '#27ae60';
+            } catch (error) {
+                if (error.message === 'STOP_SORTING') {
+                    statusText.innerText = "Ordenação Interrompida. Clique em Novo Vetor.";
+                    statusText.style.color = '#c0392b';
+                } else {
+                    console.error(error);
+                }
+            } finally {
+                isSorting = false;
+                toggleButtons(false);
+            }
+        }
+
+        // Inicialização
+        updateDidacticInfo();
+        generateArray();
+    </script>
+</body>
+</html>
